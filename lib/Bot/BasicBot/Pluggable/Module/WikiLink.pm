@@ -136,6 +136,8 @@ L<http://metacpan.org/dist/Bot::BasicBot::Pluggable::Module::WikiLink>
 =item * C<Bot::BasicBot::Pluggable>
 =item * C<WWW::Wikipedia>
 
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 	Chris Chapman for suggesting the feature. Wikipedia for containing the entirety of human knowledge.
