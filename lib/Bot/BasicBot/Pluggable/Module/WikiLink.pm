@@ -1,8 +1,12 @@
 package Bot::BasicBot::Pluggable::Module::WikiLink;
 
-use 5.006;
+use base qw(Bot::BasicBot::Pluggable::Module);
+
+use warnings;
 use strict;
-use warnings FATAL => 'all';
+
+use WWW::Wikipedia;
+use URI::Title qw/title/;
 
 =head1 NAME
 
@@ -16,37 +20,74 @@ Version 0.01
 
 our $VERSION = '0.01';
 
-
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+Spots wiki-markup style links e.g. [[Wikipedia]] and provides a URI and title from
+(currently, only the English language version of) Wikipedia.
 
-Perhaps a little code snippet.
+    $bot->load('WikiLink');
 
-    use Bot::BasicBot::Pluggable::Module::WikiLink;
-
-    my $foo = Bot::BasicBot::Pluggable::Module::WikiLink->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
+No, really, that's it.
 
 =cut
 
-sub function1 {
+=head1 IRC Usage
+
+It should follow redirects, and make limited use of search, but if there's no obviously-correct result
+you won't get a response at all. Some examples
+
+	00:31:27 <jkg> I <3 [[Perl]]!
+	00:31:29 <hadaly> http://en.wikipedia.org/wiki/Perl -- Perl - Wikipedia, the free encyclopedia
+	00:31:38 <jkg> [[Perl programming language]] is awesome!
+	00:31:40 <hadaly> http://en.wikipedia.org/wiki/Perl -- Perl - Wikipedia, the free encyclopedia
+
+=cut
+
+sub help {
+    return "Speaks the wikipedia URLs of things mentioned [[Like This]]";
 }
 
-=head2 function2
+=head1 Vars
+
+None currently. I'll add an override for the wikipedia language version in a future release.
 
 =cut
 
-sub function2 {
+sub init {
+    my $self = shift;
+    $self->config(
+        {} # nothing to configure yet
+    );
+}
+
+sub told {
+
+    my ( $self, $mess ) = @_;
+
+    my @pages = ( $mess->{body} =~ m/(?<=\[\[)(.*?)(?=\]\])/g );
+
+    return unless @pages;
+
+    my $wiki = WWW::Wikipedia->new();
+
+    for ( @pages ) {
+
+        my $result = $wiki->search( $_ );
+
+        next unless defined $result->{title};
+
+        my $url = "http://en.wikipedia.org/wiki/" . $result->{title};
+
+        my $title = title($url);
+
+        next unless $title;
+        
+        my $reply = "$url -- $title";
+        $self->reply( $mess, $reply );
+
+    }
+
+    return;  # be passive here; this may not be the only desired plugin for this line
 }
 
 =head1 AUTHOR
@@ -60,14 +101,11 @@ the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Bot-BasicB
 automatically be notified of progress on your bug as I make changes.
 
 
-
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
     perldoc Bot::BasicBot::Pluggable::Module::WikiLink
-
 
 You can also look for information at:
 
@@ -85,15 +123,22 @@ L<http://annocpan.org/dist/Bot-BasicBot-Pluggable-Module-WikiLink>
 
 L<http://cpanratings.perl.org/d/Bot-BasicBot-Pluggable-Module-WikiLink>
 
-=item * Search CPAN
+=item * MetaCPAN
 
-L<http://search.cpan.org/dist/Bot-BasicBot-Pluggable-Module-WikiLink/>
+L<http://metacpan.org/dist/Bot::BasicBot::Pluggable::Module::WikiLink>
 
 =back
 
+=head1 See Also
+
+=over 4
+
+=item * C<Bot::BasicBot::Pluggable>
+=item * C<WWW::Wikipedia>
 
 =head1 ACKNOWLEDGEMENTS
 
+	Chris Chapman for suggesting the feature. Wikipedia for containing the entirety of human knowledge.
 
 =head1 LICENSE AND COPYRIGHT
 
@@ -138,4 +183,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Bot::BasicBot::Pluggable::Module::WikiLink
+42; # End of Bot::BasicBot::Pluggable::Module::WikiLink
