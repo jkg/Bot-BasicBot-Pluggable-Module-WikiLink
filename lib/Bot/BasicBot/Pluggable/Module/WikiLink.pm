@@ -10,15 +10,15 @@ use URI::Title qw/title/;
 
 =head1 NAME
 
-Bot::BasicBot::Pluggable::Module::WikiLink - The great new Bot::BasicBot::Pluggable::Module::WikiLink!
+Bot::BasicBot::Pluggable::Module::WikiLink - a simple Wikipedia helper plugin for Bot::BasicBot::Pluggable
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -134,13 +134,16 @@ L<http://metacpan.org/dist/Bot::BasicBot::Pluggable::Module::WikiLink>
 =over 4
 
 =item * C<Bot::BasicBot::Pluggable>
+
 =item * C<WWW::Wikipedia>
 
 =back
 
 =head1 ACKNOWLEDGEMENTS
 
-	Chris Chapman for suggesting the feature. Wikipedia for containing the entirety of human knowledge.
+=item * Chris Chapman for suggesting the feature.
+
+=item * Wikipedia for containing the entirety of human knowledge.
 
 =head1 LICENSE AND COPYRIGHT
 
