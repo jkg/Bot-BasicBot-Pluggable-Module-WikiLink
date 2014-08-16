@@ -141,9 +141,13 @@ L<http://metacpan.org/dist/Bot::BasicBot::Pluggable::Module::WikiLink>
 
 =head1 ACKNOWLEDGEMENTS
 
+=over 4
+
 =item * Chris Chapman for suggesting the feature.
 
 =item * Wikipedia for containing the entirety of human knowledge.
+
+=back
 
 =head1 LICENSE AND COPYRIGHT
 
